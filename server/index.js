@@ -44,23 +44,32 @@ if (!cached) {
     cached = global.mongoose = { conn: null, promise: null };
 }
 
-const connectDB = async () => {
+async function connectDB() {
     if (cached.conn) {
-        console.log(' Using Cached MongoDB Connection');
+        console.log('Using Cached MongoDB Connection');
         return cached.conn;
     }
 
     if (!cached.promise) {
+        const os = require('os');
+        const HOSTNAME = os.hostname();
+        const MONGO_URI = process.env.MONGO_URI || process.env.MONGODB_URI || "mongodb+srv://Vercel-Admin-EFOUR:52sxxM83PIPKobvk@efour.ojwn6t6.mongodb.net/?retryWrites=true&w=majority";
+
+        console.log(`[DB] Connecting to MongoDB... (Host: ${HOSTNAME})`);
+
         const opts = {
             bufferCommands: false,
             serverSelectionTimeoutMS: 5000,
             socketTimeoutMS: 45000,
+            family: 4 // Force IPv4
         };
 
-        const MONGO_FALLBACK = "mongodb+srv://Vercel-Admin-EFOUR:52sxxM83PIPKobvk@efour.ojwn6t6.mongodb.net/?retryWrites=true&w=majority";
-        cached.promise = mongoose.connect(process.env.MONGO_URI || process.env.MONGODB_URI || MONGO_FALLBACK, opts).then((mongoose) => {
-            console.log(' New MongoDB Connection Established');
+        cached.promise = mongoose.connect(MONGO_URI, opts).then((mongoose) => {
+            console.log('[DB] New MongoDB Connection Established');
             return mongoose;
+        }).catch(err => {
+            console.error('[DB] MongoDB Connection Failed:', err);
+            throw err;
         });
     }
 
@@ -72,16 +81,19 @@ const connectDB = async () => {
     }
 
     return cached.conn;
-};
+}
 
 // Ensure DB is connected for every request in serverless environment
 app.use(async (req, res, next) => {
+    // Skip DB connection for static files or simple health checks if needed
+    if (req.path === '/' || req.path === '/favicon.ico') return next();
+
     try {
         await connectDB();
         next();
     } catch (error) {
-        console.error('Database Connection Failed:', error);
-        res.status(500).json({ error: 'Database Connection Failed' });
+        console.error('Database Connection Middleware Error:', error);
+        res.status(500).json({ error: 'Database Connection Failed', details: error.message });
     }
 });
 
