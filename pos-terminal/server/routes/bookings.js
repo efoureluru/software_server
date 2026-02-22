@@ -7,7 +7,7 @@ const { auth, admin } = require('../middleware/auth');
  * @swagger
  * /api/bookings:
  *   get:
- *     summary: Get all bookings (Admin)
+ *     summary: "Get all bookings (Admin)"
  *     tags: [Bookings]
  */
 router.get('/', auth, admin, async (req, res) => {
@@ -23,7 +23,7 @@ router.get('/', auth, admin, async (req, res) => {
  * @swagger
  * /api/bookings:
  *   post:
- *     summary: Create a booking
+ *     summary: "Create a booking"
  *     tags: [Bookings]
  */
 router.post('/', async (req, res) => {

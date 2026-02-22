@@ -43,7 +43,7 @@ export function TicketVerifier() {
 
         try {
             // Backend lookup
-            const API_URL = import.meta.env.VITE_API_URL || 'https://software-ksid.vercel.app';
+            const API_URL = import.meta.env.VITE_API_URL || '';
             const response = await axios.get(`${API_URL}/api/tickets/${searchId}`);
             const ticket = response.data;
 

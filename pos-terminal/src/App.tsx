@@ -54,6 +54,8 @@ function App() {
           // Also set x-auth-token for legacy routes
           config.headers['x-auth-token'] = token;
         }
+        // Bypass ngrok browser warning
+        config.headers['ngrok-skip-browser-warning'] = 'true';
         return config;
       },
       (error) => Promise.reject(error)

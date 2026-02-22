@@ -10,7 +10,12 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token'],
+    exposedHeaders: ['X-Auth-Debug']
+}));
 app.use(express.json());
 
 // Swagger Setup
@@ -57,7 +62,7 @@ const connectDB = async () => {
             socketTimeoutMS: 45000,
         };
 
-        cached.promise = mongoose.connect(process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/ethree_pos', opts).then((mongoose) => {
+        cached.promise = mongoose.connect(process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/ethree', opts).then((mongoose) => {
             console.log(' New MongoDB Connection Established');
             return mongoose;
         });
@@ -108,7 +113,11 @@ app.use('/api/tickets', ticketRoutes);
 
 if (process.env.NODE_ENV !== 'production') {
     app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
+        console.log('==============================================');
+        console.log(`🚀 POS-TERMINAL SERVER RUNNING ON PORT ${PORT}`);
+        console.log(`📂 Path: /pos-terminal/server/index.js`);
+        console.log(`🔗 API: http://localhost:${PORT}`);
+        console.log('==============================================');
         console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
     });
 }

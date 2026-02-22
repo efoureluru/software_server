@@ -168,10 +168,11 @@ export default function POS() {
 
         if (pending.length === 0) return;
 
-        console.log(`Attempting to sync ${pending.length} tickets to ${import.meta.env.VITE_API_URL || ''}/api/tickets`);
+        const API_URL = import.meta.env.VITE_API_URL || '';
+        console.log(`Attempting to sync ${pending.length} tickets to ${API_URL}/api/tickets`);
         setIsSyncing(true);
         try {
-            await axios.post(`${import.meta.env.VITE_API_URL || ''}/api/tickets`, pending);
+            await axios.post(`${API_URL}/api/tickets`, pending);
             localStorage.setItem('pending_tickets', '[]');
             setPendingCount(0);
             alert(`Synced ${pending.length} offline tickets to server.`);
@@ -526,7 +527,7 @@ export default function POS() {
                                         </div>
                                         <h3 className="text-lg font-bold text-slate-500">NO RIDES AVAILABLE</h3>
                                         <p className="text-sm">Check your connection or try refreshing.</p>
-                                        <p className="text-[10px] bg-slate-200 px-2 py-0.5 rounded mt-4 font-mono">API: {import.meta.env.VITE_API_URL || 'https://software-tawny-gamma.vercel.app'}</p>
+                                        <p className="text-[10px] bg-slate-200 px-2 py-0.5 rounded mt-4 font-mono">API: {import.meta.env.VITE_API_URL || 'https://thurman-unexpropriable-mesmerizingly.ngrok-free.dev'}</p>
                                         <button
                                             onClick={() => window.location.reload()}
                                             className="mt-6 px-6 py-2 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition-all shadow-lg"

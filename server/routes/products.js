@@ -8,7 +8,7 @@ const { auth, admin } = require('../middleware/auth');
  * @swagger
  * /api/products:
  *   get:
- *     summary: Get all products
+ *     summary: "Get all products"
  *     tags: [Products]
  */
 // Initial Seeding Logic (Run on request to ensure serverless execution)
@@ -82,7 +82,7 @@ module.exports = router;
  * @swagger
  * /api/products:
  *   post:
- *     summary: Create a product (Admin only - HOTFIX: Open for now)
+ *     summary: "Create a product (Admin only - HOTFIX: Open for now)"
  *     tags: [Products]
  */
 router.post('/', async (req, res) => {
@@ -98,7 +98,7 @@ router.post('/', async (req, res) => {
  * @swagger
  * /api/products/force-reset:
  *   get:
- *     summary: Manually force database re-seeding (Nuclear Option)
+ *     summary: "Manually force database re-seeding (Nuclear Option)"
  *     tags: [Products]
  */
 router.get('/force-reset', async (req, res) => {
@@ -139,7 +139,7 @@ router.get('/debug-db', async (req, res) => {
  * @swagger
  * /api/products/:id:
  *   put:
- *     summary: Update a product (Admin only - HOTFIX: Open for now)
+ *     summary: "Update a product (Admin only - HOTFIX: Open for now)"
  *     tags: [Products]
  */
 router.put('/:id', async (req, res) => {
@@ -156,7 +156,7 @@ router.put('/:id', async (req, res) => {
  * @swagger
  * /api/products/:id:
  *   delete:
- *     summary: Delete a product (Admin only - HOTFIX: Open for now)
+ *     summary: "Delete a product (Admin only - HOTFIX: Open for now)"
  *     tags: [Products]
  */
 router.delete('/:id', async (req, res) => {

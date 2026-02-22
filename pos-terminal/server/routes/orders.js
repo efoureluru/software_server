@@ -10,7 +10,7 @@ const stripe = process.env.STRIPE_SECRET_KEY ? Stripe(process.env.STRIPE_SECRET_
  * @swagger
  * /api/orders/all:
  *   get:
- *     summary: Get all orders (Admin only)
+ *     summary: "Get all orders (Admin only)"
  *     tags: [Orders]
  */
 router.get('/all', auth, admin, async (req, res) => {
@@ -26,7 +26,7 @@ router.get('/all', auth, admin, async (req, res) => {
  * @swagger
  * /api/orders:
  *   get:
- *     summary: Get user orders
+ *     summary: "Get user orders"
  *     tags: [Orders]
  */
 router.get('/', auth, async (req, res) => {
@@ -42,7 +42,7 @@ router.get('/', auth, async (req, res) => {
  * @swagger
  * /api/orders/checkout:
  *   post:
- *     summary: Create checkout session
+ *     summary: "Create checkout session"
  *     tags: [Orders]
  */
 router.post('/checkout', auth, async (req, res) => {

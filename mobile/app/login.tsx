@@ -10,7 +10,7 @@ import Animated, { FadeInUp, FadeInDown } from 'react-native-reanimated';
 
 // For Android Emulator use 'http://10.0.2.2:5001'
 // For Physical Device use your machine's IP e.g. 'http://192.168.1.X:5001'
-const API_URL = 'http://10.0.2.2:5001';
+const API_URL = 'https://thurman-unexpropriable-mesmerizingly.ngrok-free.dev';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -24,7 +24,10 @@ const Login = () => {
         try {
             const res = await fetch(`${API_URL}/api/auth/send-otp`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'ngrok-skip-browser-warning': 'true'
+                },
                 body: JSON.stringify({ email })
             });
             if (res.ok) {
@@ -42,7 +45,10 @@ const Login = () => {
         try {
             const res = await fetch(`${API_URL}/api/auth/verify-otp`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'ngrok-skip-browser-warning': 'true'
+                },
                 body: JSON.stringify({ email, otp })
             });
             const data = await res.json();
@@ -62,7 +68,10 @@ const Login = () => {
         try {
             const res = await fetch(`${API_URL}/api/auth/login`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'ngrok-skip-browser-warning': 'true'
+                },
                 body: JSON.stringify({ email, password })
             });
             const data = await res.json();

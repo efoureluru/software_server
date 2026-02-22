@@ -6,7 +6,7 @@ const Ticket = require('../models/Ticket');
  * @swagger
  * /api/tickets:
  *   post:
- *     summary: Create a new ticket
+ *     summary: "Create a new ticket"
  *     tags: [Tickets]
  */
 router.post('/', async (req, res) => {
@@ -41,7 +41,7 @@ router.post('/', async (req, res) => {
  * @swagger
  * /api/tickets:
  *   get:
- *     summary: Get all tickets
+ *     summary: "Get all tickets"
  *     tags: [Tickets]
  */
 router.get('/', async (req, res) => {
@@ -58,7 +58,7 @@ router.get('/', async (req, res) => {
  * @swagger
  * /api/tickets/{id}:
  *   get:
- *     summary: Get a ticket by ID (search by TXN ID or Mongo ID)
+ *     summary: "Get a ticket by ID (search by TXN ID or Mongo ID)"
  *     tags: [Tickets]
  */
 router.get('/:id', async (req, res) => {
@@ -81,7 +81,7 @@ router.get('/:id', async (req, res) => {
  * @swagger
  * /api/tickets/{id}/verify:
  *   post:
- *     summary: Verify and redeem a ticket
+ *     summary: "Verify and redeem a ticket"
  *     tags: [Tickets]
  */
 router.post('/:id/verify', async (req, res) => {
@@ -136,7 +136,7 @@ const { auth, admin } = require('../middleware/auth');
  * @swagger
  * /api/tickets/clear-all:
  *   delete:
- *     summary: Delete all tickets (Clear History)
+ *     summary: "Delete all tickets (Clear History)"
  *     tags: [Tickets]
  */
 router.delete('/clear-all', async (req, res) => {

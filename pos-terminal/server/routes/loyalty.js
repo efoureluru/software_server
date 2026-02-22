@@ -6,7 +6,7 @@ const Customer = require('../models/Customer');
  * @swagger
  * /api/loyalty/{mobile}:
  *   get:
- *     summary: Get loyalty points balance
+ *     summary: "Get loyalty points balance"
  */
 router.get('/:mobile', async (req, res) => {
     try {
@@ -21,7 +21,7 @@ router.get('/:mobile', async (req, res) => {
  * @swagger
  * /api/loyalty/earn:
  *   post:
- *     summary: Earn points based on transaction amount
+ *     summary: "Earn points based on transaction amount"
  */
 router.post('/earn', async (req, res) => {
     try {
@@ -67,7 +67,7 @@ router.post('/earn', async (req, res) => {
  * @swagger
  * /api/loyalty/redeem:
  *   post:
- *     summary: Redeem 100 points for a reward
+ *     summary: "Redeem 100 points for a reward"
  */
 router.post('/redeem', async (req, res) => {
     try {

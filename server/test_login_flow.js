@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:5001/api/auth';
+const API_URL = 'https://thurman-unexpropriable-mesmerizingly.ngrok-free.dev/api/auth';
 const EMAIL = 'admin@ethree.com';
 const PASSWORD = 'admin123';
 

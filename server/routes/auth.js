@@ -5,10 +5,10 @@ const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 const User = require('../models/User');
 
-// Fallback secret for development/debugging if env var fails
+// Use a shared secret for dev if not in env
 const JWT_SECRET = process.env.JWT_SECRET || 'ethree_fallback_secret_key_2024';
 if (!process.env.JWT_SECRET) {
-    console.warn('⚠️ WARNING: Using fallback JWT_SECRET. Please configure process.env.JWT_SECRET in production.');
+    console.log('💡 [INFO] Server using fallback JWT_SECRET');
 }
 
 // Middleware to check if user is admin
@@ -31,6 +31,7 @@ const verifyAdmin = async (req, res, next) => {
         const user = await User.findById(decoded.id);
         if (!user) {
             console.error('[AUTH DEBUG] User not found for ID:', decoded.id);
+            res.setHeader('X-Auth-Debug', 'User not found in database');
             return res.status(401).json({ message: 'User not found' });
         }
 
@@ -44,6 +45,7 @@ const verifyAdmin = async (req, res, next) => {
         next();
     } catch (err) {
         console.error('[AUTH DEBUG] Token verification failed:', err.message);
+        res.setHeader('X-Auth-Debug', `Invalid token: ${err.message}`);
         res.status(401).json({ message: 'Invalid token' });
     }
 };
@@ -52,7 +54,7 @@ const verifyAdmin = async (req, res, next) => {
  * @swagger
  * /api/auth/register:
  *   post:
- *     summary: Register a new user
+ *     summary: "Register a new user"
  *     tags: [Auth]
  */
 router.post('/register', async (req, res) => {
@@ -75,7 +77,7 @@ router.post('/register', async (req, res) => {
  * @swagger
  * /api/auth/login:
  *   post:
- *     summary: Login a user
+ *     summary: "Login a user"
  *     tags: [Auth]
  */
 router.post('/login', async (req, res) => {
@@ -120,7 +122,7 @@ router.post('/login', async (req, res) => {
  * @swagger
  * /api/auth/change-password:
  *   post:
- *     summary: Admin changes user password
+ *     summary: "Admin changes user password"
  *     tags: [Auth]
  */
 router.post('/change-password', verifyAdmin, async (req, res) => {
@@ -145,7 +147,7 @@ router.post('/change-password', verifyAdmin, async (req, res) => {
  * @swagger
  * /api/auth/change-email:
  *   post:
- *     summary: Admin changes user email
+ *     summary: "Admin changes user email"
  *     tags: [Auth]
  */
 router.post('/change-email', verifyAdmin, async (req, res) => {
@@ -177,7 +179,7 @@ router.post('/change-email', verifyAdmin, async (req, res) => {
  * @swagger
  * /api/auth/send-otp:
  *   post:
- *     summary: Send dummy OTP
+ *     summary: "Send dummy OTP"
  *     tags: [Auth]
  */
 router.post('/send-otp', async (req, res) => {
@@ -190,7 +192,7 @@ router.post('/send-otp', async (req, res) => {
  * @swagger
  * /api/auth/verify-otp:
  *   post:
- *     summary: Verify dummy OTP and login
+ *     summary: "Verify dummy OTP and login"
  *     tags: [Auth]
  */
 router.post('/verify-otp', async (req, res) => {
@@ -217,7 +219,7 @@ router.post('/verify-otp', async (req, res) => {
  * @swagger
  * /api/auth/users:
  *   get:
- *     summary: Get all users (Admin only)
+ *     summary: "Get all users (Admin only)"
  *     tags: [Auth]
  */
 router.get('/users', verifyAdmin, async (req, res) => {

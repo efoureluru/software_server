@@ -6,6 +6,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recha
 
 interface User {
     _id: string;
+    id?: string;
     name: string;
     email: string;
     role: string;
@@ -73,10 +74,11 @@ export default function AdminDashboard() {
             const API_URL = import.meta.env.VITE_API_URL || '';
             const response = await axios.get(`${API_URL}/api/tickets`);
 
+            // FIX: Robust check for array response
+            const responseData = Array.isArray(response.data) ? response.data : [];
+
             // FIX: Filter out "Sub-Tickets" (Coupons) to avoid double counting transactions.
-            // We only want to show the "Master Ticket" (Receipt) which contains the total amount.
-            // Master tickets do NOT have a parentId.
-            const validTickets = response.data.filter((t: any) => !t.parentId);
+            const validTickets = responseData.filter((t: any) => !t.parentId);
 
             setTickets(validTickets);
         } catch (error) {
@@ -92,12 +94,18 @@ export default function AdminDashboard() {
         try {
             const API_URL = import.meta.env.VITE_API_URL || '';
             const token = localStorage.getItem('token');
+            console.log(`[ADMIN DEBUG] Fetching users from: ${API_URL}/api/auth/users`);
+            console.log(`[ADMIN DEBUG] Token found: ${token ? 'YES' : 'NO'} (${token ? token.substring(0, 10) + '...' : 'null'})`);
             const response = await axios.get(`${API_URL}/api/auth/users`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            setUsers(response.data);
-        } catch (error) {
-            console.error('Failed to fetch users', error);
+            setUsers(Array.isArray(response.data) ? response.data : []);
+        } catch (error: any) {
+            const debugHeader = error.response?.headers?.['x-auth-debug'];
+            console.error('[ADMIN DEBUG] Failed to fetch users', error);
+            if (debugHeader) {
+                console.warn(`[ADMIN DEBUG] Server says: ${debugHeader}`);
+            }
         }
     };
 
@@ -695,8 +703,8 @@ export default function AdminDashboard() {
                                 </thead>
                                 <tbody className="divide-y divide-slate-100">
                                     {loading ? (
-                                        <tr>
-                                            <td colSpan={5} className="px-6 py-12 text-center">
+                                        <tr key="loading-state">
+                                            <td colSpan={6} className="px-6 py-12 text-center">
                                                 <div className="flex flex-col items-center justify-center text-slate-400">
                                                     <RefreshCw size={32} className="animate-spin mb-3 text-slate-300" />
                                                     <span className="font-medium">Loading sales data...</span>
@@ -704,14 +712,14 @@ export default function AdminDashboard() {
                                             </td>
                                         </tr>
                                     ) : filteredTickets.length === 0 ? (
-                                        <tr>
-                                            <td colSpan={5} className="px-6 py-12 text-center text-slate-500">
+                                        <tr key="empty-state">
+                                            <td colSpan={6} className="px-6 py-12 text-center text-slate-500">
                                                 No tickets found matching your search.
                                             </td>
                                         </tr>
                                     ) : (
-                                        filteredTickets.map((ticket) => (
-                                            <tr key={ticket._id} className="group hover:bg-slate-50/80 transition-colors">
+                                        filteredTickets.map((ticket, index) => (
+                                            <tr key={`ticket-${ticket._id || ticket.id || ''}-${index}`} className="group hover:bg-slate-50/80 transition-colors">
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center gap-3">
                                                         <div className="bg-slate-100 p-2 rounded-lg text-slate-500 group-hover:bg-white group-hover:shadow-sm transition-all">
@@ -895,14 +903,14 @@ export default function AdminDashboard() {
                                 </thead>
                                 <tbody className="divide-y divide-slate-100">
                                     {filteredUsers.length === 0 ? (
-                                        <tr>
+                                        <tr key="no-users">
                                             <td colSpan={5} className="px-6 py-12 text-center text-slate-500 font-medium italic">
                                                 No users found matching your search.
                                             </td>
                                         </tr>
                                     ) : (
-                                        filteredUsers.map((user) => (
-                                            <tr key={user._id} className="hover:bg-slate-50/80 transition-colors group">
+                                        filteredUsers.map((user, index) => (
+                                            <tr key={`user-${user._id || user.id || index}`} className="hover:bg-slate-50/80 transition-colors group">
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center gap-3">
                                                         <div className="bg-blue-50 p-2 rounded-lg text-blue-500 group-hover:bg-white transition-all shadow-sm">

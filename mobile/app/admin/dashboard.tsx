@@ -9,7 +9,7 @@ import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 
 // Helper for API URL (Using 10.0.2.2 for Android Emulator, localhost for others)
 // ideally this should be in a constants file
-const API_URL = 'http://10.0.2.2:5001';
+const API_URL = 'https://thurman-unexpropriable-mesmerizingly.ngrok-free.dev';
 
 const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState('orders');

@@ -7,7 +7,7 @@
     "build": "tsc -b && vite build",
     "electron:dev": "concurrently \"vite\" \"wait-on tcp:5173 && electron .\"",
     "electron:build": "tsc -b && vite build && electron-builder",
-    "package-windows": "tsc -b && vite build && electron-packager . \"Efour POS\" --platform=win32 --arch=x64 --out=dist-windows --overwrite",
+    "package-windows": "tsc -b && vite build && electron-packager . \"Efour POS\" --platform=win32 --arch=x64 --out=distwindows --no-wine --overwrite",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -46,9 +46,9 @@
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.13.0",
     "recharts": "^3.7.0",
+    "stripe": "^20.3.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
-    "stripe": "^20.1.2",
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {

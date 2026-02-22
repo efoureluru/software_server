@@ -10,8 +10,18 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token', 'ngrok-skip-browser-warning'],
+    exposedHeaders: ['X-Auth-Debug']
+}));
 app.use(express.json());
+// Request Logger
+app.use((req, res, next) => {
+    console.log(`[REQUEST] ${req.method} ${req.path}`);
+    next();
+});
 
 // Swagger Setup
 const swaggerOptions = {
@@ -53,7 +63,7 @@ async function connectDB() {
     if (!cached.promise) {
         const os = require('os');
         const HOSTNAME = os.hostname();
-        const MONGO_URI = process.env.MONGO_URI || process.env.MONGODB_URI || "mongodb+srv://Vercel-Admin-EFOUR:52sxxM83PIPKobvk@efour.ojwn6t6.mongodb.net/?retryWrites=true&w=majority";
+        const MONGO_URI = process.env.MONGO_URI || process.env.MONGODB_URI || "mongodb+srv://Vercel-Admin-EFOUR:52sxxM83PIPKobvk@efour.ojwn6t6.mongodb.net/ethree?retryWrites=true&w=majority";
 
         console.log(`[DB] Connecting to MongoDB... (Host: ${HOSTNAME})`);
 
@@ -99,7 +109,7 @@ app.use(async (req, res, next) => {
 
 // Root Route
 app.get('/', (req, res) => {
-    res.send('Ethree Mock API is running. Check /api-docs for documentation.');
+    res.send('EFOUR LOCAL SERVER IS RUNNING (PORT 5001). Check /api-docs for documentation.');
 });
 
 // Import Routes
@@ -124,7 +134,11 @@ app.use('/api/rates', rateRoutes);
 
 if (process.env.NODE_ENV !== 'production') {
     app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
+        console.log('==============================================');
+        console.log(`🚀 ROOT SERVER RUNNING ON PORT ${PORT}`);
+        console.log(`📂 Path: /server/index.js`);
+        console.log(`🔗 API: http://localhost:${PORT}`);
+        console.log('==============================================');
         console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
     });
 }
