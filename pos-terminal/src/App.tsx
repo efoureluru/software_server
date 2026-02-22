@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 // Main App Component
 import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import axios from 'axios';
@@ -42,46 +42,39 @@ function PrivateRoute({ children, role }: { children: React.ReactNode, role?: st
   return children;
 }
 
-function App() {
-  // Setup Global Axios Interceptors
-  useEffect(() => {
-    // Request Interceptor: Attach Token
-    const requestInterceptor = axios.interceptors.request.use(
-      (config) => {
-        const token = localStorage.getItem('token');
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-          // Also set x-auth-token for legacy routes
-          config.headers['x-auth-token'] = token;
-        }
-        // Bypass ngrok browser warning
-        config.headers['ngrok-skip-browser-warning'] = 'true';
-        return config;
-      },
-      (error) => Promise.reject(error)
-    );
+// Setup Global Axios Interceptors
+axios.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+      // Also set x-auth-token for legacy routes
+      config.headers['x-auth-token'] = token;
+    }
+    // Bypass ngrok browser warning
+    config.headers['ngrok-skip-browser-warning'] = 'true';
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
-    // Response Interceptor: Auto Logout on 401/403
-    const responseInterceptor = axios.interceptors.response.use(
-      (response) => response,
-      (error) => {
-        if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-          console.error('[Interceptor] Auth Error:', error.response.status, error.config.url);
-          if (!window.location.hash.includes('/login')) {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            window.location.hash = '#/login';
-          }
-        }
-        return Promise.reject(error);
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+      console.error('[Interceptor] Auth Error:', error.response.status, error.config.url);
+      if (!window.location.hash.includes('/login')) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.hash = '#/login';
       }
-    );
+    }
+    return Promise.reject(error);
+  }
+);
 
-    return () => {
-      axios.interceptors.request.eject(requestInterceptor);
-      axios.interceptors.response.eject(responseInterceptor);
-    };
-  }, []);
+function App() {
+
 
   return (
     <Router>
